@@ -154,11 +154,11 @@ def main():
     dt = contest["datetime"]
     print(f"次のABC: {contest_id} ({dt.strftime('%Y-%m-%d %H:%M')})")
 
-    # 当日チェック
-    today = datetime.now(JST).date()
-    contest_date_jst = dt.astimezone(JST).date()
-    if today != contest_date_jst and not dry_run:
-        print(f"今日({today})はコンテスト開催日({contest_date_jst})ではないため送信しません。")
+    # 開催1時間前チェック（30〜90分前なら送信）
+    now = datetime.now(JST)
+    minutes_until = (dt.astimezone(JST) - now).total_seconds() / 60
+    if not dry_run and not (30 <= minutes_until <= 90):
+        print(f"開催まで{int(minutes_until)}分（30〜90分前でないため送信しません）")
         sys.exit(0)
 
     if dry_run:
