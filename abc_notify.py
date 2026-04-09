@@ -123,7 +123,7 @@ def send_slack_message(contest):
         f"\n"
         f"https://atcoder.jp/contests/{contest_id}\n"
         f"\n"
-        f"結果や感想のNotionページは後ほど共有します。"
+        f"結果や感想のNotionページは後日更新する予定です。"
     )
 
     payload = json.dumps({"text": message}).encode("utf-8")
@@ -168,7 +168,7 @@ def main():
         print(f"本日（{date_str}）、{time_str}から{contest_num}が開催されます。")
         print("出られそうな人はぜひ参加してみてください!!")
         print(f"\nhttps://atcoder.jp/contests/{contest_id}")
-        print(f"\n結果や感想のNotionページは後ほど共有します。")
+        print(f"\n結果や感想のNotionページは後日更新する予定です。")
         return
 
     print("Slackに送信中...")
