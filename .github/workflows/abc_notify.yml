@@ -2,8 +2,9 @@ name: ABC Contest Notify
 
 on:
   schedule:
-    # 毎日 毎時チェック（JST 10:00-22:00）、開催1時間前に送信
-    - cron: "0 1-13 * * *"
+    # 昼12時(JST)にチェック、20時(JST)に送信
+    - cron: "0 3 * * *"
+    - cron: "0 11 * * *"
   workflow_dispatch: # 手動実行も可能
 
 jobs:
@@ -19,4 +20,5 @@ jobs:
       - name: Run notify script
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          TRIGGER_CRON: ${{ github.event.schedule }}
         run: python abc_notify.py

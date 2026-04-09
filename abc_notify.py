@@ -142,6 +142,9 @@ def send_slack_message(contest):
 
 def main():
     dry_run = "--dry-run" in sys.argv
+    # 12時のcron(0 3 * * *)ならチェックのみ、20時のcron(0 11 * * *)なら送信
+    trigger_cron = os.environ.get("TRIGGER_CRON", "")
+    check_only = trigger_cron == "0 3 * * *"
 
     print("AtCoderからコンテスト情報を取得中...")
     contest = fetch_next_abc()
@@ -154,17 +157,22 @@ def main():
     dt = contest["datetime"]
     print(f"次のABC: {contest_id} ({dt.strftime('%Y-%m-%d %H:%M')})")
 
-    # 開催1時間前チェック（30〜90分前なら送信）
-    now = datetime.now(JST)
-    minutes_until = (dt.astimezone(JST) - now).total_seconds() / 60
-    if not dry_run and not (30 <= minutes_until <= 90):
-        print(f"開催まで{int(minutes_until)}分（30〜90分前でないため送信しません）")
+    # 当日チェック
+    today = datetime.now(JST).date()
+    contest_date_jst = dt.astimezone(JST).date()
+    if today != contest_date_jst:
+        print(f"今日({today})はコンテスト開催日({contest_date_jst})ではありません。")
         sys.exit(0)
+
+    if check_only:
+        print(f"本日{contest_id.upper()}が開催予定です（チェックのみ、送信は20時）")
+        return
 
     if dry_run:
         print("\n[dry-run] 以下のメッセージが送信されます:\n")
         date_str = f"{dt.month}/{dt.day}"
         time_str = f"{dt.hour}時"
+        contest_num = contest_id.upper()
         print(f"本日（{date_str}）、{time_str}から{contest_num}が開催されます。")
         print("出られそうな人はぜひ参加してみてください!!")
         print(f"\nhttps://atcoder.jp/contests/{contest_id}")
