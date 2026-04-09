@@ -1,0 +1,22 @@
+name: ABC Contest Notify
+
+on:
+  schedule:
+    # 毎週土曜 11:00 UTC = 20:00 JST
+    - cron: "0 11 * * 6"
+  workflow_dispatch: # 手動実行も可能
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run notify script
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python abc_notify.py
