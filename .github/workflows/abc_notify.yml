@@ -2,8 +2,8 @@ name: ABC Contest Notify
 
 on:
   schedule:
-    # 毎日 19:47 JST（:00 を避けてGitHub Actionsの遅延を減らす）
-    - cron: "47 10 * * *"
+    # 毎日 19:27 JST（:00 を避けてGitHub Actionsの遅延を減らす）
+    - cron: "27 10 * * *"
   workflow_dispatch: # 手動実行も可能
 
 jobs:
